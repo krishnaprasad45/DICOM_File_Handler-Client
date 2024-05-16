@@ -1,12 +1,20 @@
-import NavBar from "./components/navNar/NavBar";
-import UploadBtn from "./components/uploadButton/UploadBtn";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import SignupPage from './pages/SignupPage/SignupPage';
+import UserHomePage from "./pages/userHomePage/UserHomePage";
+
 function App() {
   return (
     <>
-      <NavBar />
-      <div className="flex flex-col h-screen justify-center items-center">
-        <UploadBtn />
-      </div>
+      
+
+      <Router>
+        <Routes>
+          <Route path="/homepage" element={<UserHomePage />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+        </Routes>
+      </Router>
     </>
   );
 }
