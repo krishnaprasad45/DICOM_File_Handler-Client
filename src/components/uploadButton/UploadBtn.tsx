@@ -41,7 +41,10 @@ export default function UploadBtn() {
       formData.append("file", file); // Append the selected file to form data
   
       try {
-        const response = await userAxios.post("/uploadfile", formData);
+        const response = await userAxios.post("/uploadfile", formData,{
+          headers: {
+              "Content-Type": "multipart/form-data", // Set multipart/form-data for file upload
+          }});
         console.log("File uploaded successfully:", response.data);
       } catch (error) {
         console.error("Error uploading file:", error);

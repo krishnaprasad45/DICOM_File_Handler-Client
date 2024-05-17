@@ -10,7 +10,7 @@ export const userAxios = axios.create({
 });
 
 userAxios.interceptors.request.use((config) => {
-    const token = "fgdfgd445";
+    const token = localStorage.getItem('usertoken');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

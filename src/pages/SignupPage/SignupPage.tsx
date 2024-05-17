@@ -25,12 +25,12 @@ const SignupPage: React.FC = () => {
         email,
         password,
       });
-      alert("Signup successful!");
+      showSuccessToast("Otp sent");
       console.log(response);
       navigate("/otp", { state: { data: email } });
     } catch (error) {
       console.error("There was an error signing up!", error);
-      alert("Signup failed, please try again.");
+      showErrorToast("Signup failed, please try again.");
     }
   };
 
