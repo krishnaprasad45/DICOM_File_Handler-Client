@@ -1,4 +1,5 @@
-import * as React from "react";
+import React, { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -7,28 +8,32 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
-import { Link, useNavigate } from "react-router-dom";
 
-export default function MenuAppBar() {
-  const navigate =  useNavigate()
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+const MenuAppBar = React.memo(() => {
+  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleClose = () => {
+  const handleMenu = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+    },
+    []
+  );
+
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
-  const handleLogout = () => {
+  }, []);
+
+  const handleLogout = useCallback(() => {
     localStorage.removeItem("usertoken");
-    navigate('/')
+    navigate("/");
+    handleClose();
+  }, [navigate, handleClose]);
 
-  };
-  const handleRecords = () => {
-    
-    navigate('/get/records')
-
-  };
+  const handleRecords = useCallback(() => {
+    navigate("/get/records");
+    handleClose();
+  }, [navigate, handleClose]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -42,7 +47,9 @@ export default function MenuAppBar() {
             sx={{ mr: 2 }}
           ></IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-           <Link to={'/home'}> <h1>DICOM</h1></Link>
+            <Link to={"/home"}>
+              <h1>DICOM</h1>
+            </Link>
           </Typography>
 
           <div>
@@ -79,4 +86,6 @@ export default function MenuAppBar() {
       </AppBar>
     </Box>
   );
-}
+});
+
+export default MenuAppBar;

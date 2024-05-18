@@ -1,12 +1,12 @@
 import MedicalReport from "../../components/ReportDetails/ReportDetails";
 import NavBar from "../../components/navNar/NavBar";
 
-const ReportDetailsPage = () => {
+const ReportDetailsPage:React.FC = () => {
   return (
-    <div>
+    <>
       <NavBar />
       <MedicalReport />
-    </div>
+    </>
   );
 };
 

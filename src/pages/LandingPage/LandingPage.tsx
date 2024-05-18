@@ -1,11 +1,5 @@
 import LandingComponent from "../../components/landing/landing";
 
-const LandingPage = () => {
-  return (
-    <div>
-      <LandingComponent />
-    </div>
-  );
-};
+const LandingPage = () => <LandingComponent />;
 
 export default LandingPage;

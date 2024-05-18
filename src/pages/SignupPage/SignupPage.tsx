@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userAxios } from "../../Constraints/axiosInterceptor";
 import { showErrorToast, showSuccessToast } from "../../services/popups/popups";
 import { ToastContainer } from "react-toastify";
 import { imageUrls } from "../../constants/strings";
 
-const SignupPage: React.FC = () => {
+const SignupPage: React.FC = function SignupPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = useCallback(async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
@@ -30,7 +31,7 @@ const SignupPage: React.FC = () => {
       console.error("There was an error signing up!", error);
       showErrorToast("Signup failed, please try again.");
     }
-  };
+  }, [email, password, confirmPassword, navigate]);
 
   return (
     <section
@@ -47,7 +48,7 @@ const SignupPage: React.FC = () => {
         >
           <img
             className="w-8 h-8 mr-2"
-            src="https://res.cloudinary.com/dc3otxw05/image/upload/v1715892724/User%20Image/oqowi3edaj5h0svyh6zc.jpg"
+            src={imageUrls.imageUrl4}
             alt="logo"
           />
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -139,4 +140,4 @@ const SignupPage: React.FC = () => {
   );
 };
 
-export default SignupPage;
+export default React.memo(SignupPage);

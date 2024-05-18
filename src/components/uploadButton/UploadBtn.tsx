@@ -1,6 +1,5 @@
-import * as React from "react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useHistory hook
+import React, { useState, useCallback, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -29,20 +28,22 @@ const StyledButton = styled(Button)({
   },
 });
 
-const UploadBtn: React.FC = () => {
+interface UploadBtnProps {}
+
+const UploadBtn: React.FC<UploadBtnProps> = React.memo(() => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
-  const navigate = useNavigate(); // Initialize useHistory hook
+  const navigate = useNavigate();
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if(file) setSelectedFile(file);
+  const handleFileChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    if (file) {
+      setSelectedFile(file);
+
       const formData = new FormData();
       formData.append("file", file);
-      const userEmail = localStorage.getItem('userEmail') || '';
-
+      const userEmail = localStorage.getItem("userEmail") || "";
       formData.append("userEmail", userEmail);
 
       try {
@@ -50,31 +51,40 @@ const UploadBtn: React.FC = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          responseType: 'blob',
+          responseType: "blob",
         });
 
-        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        setPdfUrl(pdfUrl);
-        console.log("File uploaded successfully:", response.data);
-        
-        // Navigate to a different page after successful upload
-        navigate("/pdf-viewer",{state:{data:pdfUrl}});
+        const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+        const url = URL.createObjectURL(pdfBlob);
+
+        navigate("/pdf-viewer", { state: { data: url } });
       } catch (error) {
         console.error("Error uploading file:", error);
       }
-    }
-  };
+    },
+    [navigate]
+  );
 
-  return (
-    <div>
-      <StyledButton component="label" variant="contained" startIcon={<CloudUploadIcon style={{ fontSize: 48 }} />}>
+  const uploadButton = useMemo(
+    () => (
+      <StyledButton
+        component="label"
+        variant="contained"
+        startIcon={<CloudUploadIcon style={{ fontSize: 48 }} />}
+      >
         Upload file
         <VisuallyHiddenInput type="file" onChange={handleFileChange} />
       </StyledButton>
+    ),
+    [handleFileChange]
+  );
+
+  return (
+    <div>
+      {uploadButton}
       {selectedFile && <p>Selected file: {selectedFile.name}</p>}
     </div>
   );
-};
+});
 
 export default UploadBtn;

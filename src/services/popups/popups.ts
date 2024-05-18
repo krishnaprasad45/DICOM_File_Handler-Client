@@ -2,21 +2,23 @@ import { toast, ToastPosition } from 'react-toastify';
 import "./popup.css"
 import "react-toastify/dist/ReactToastify.css";
 
+const toastConfig = {
+  position: 'top-center' as ToastPosition,
+  hideProgressBar: true,
+};
 
 export const showSuccessToast = (message: string) => {
   toast.success(message, {
-    position: 'top-center' as ToastPosition,
+    ...toastConfig,
     autoClose: 1000,
-    hideProgressBar: true,
     className: 'custom-toast',
   });
 };
 
 export const showErrorToast = (message: string) => {
   toast.error(message, {
-    position: 'top-center' as ToastPosition,
+    ...toastConfig,
     autoClose: 3000,
-    hideProgressBar: true,
     className: 'custom-error-toast',
   });
 };

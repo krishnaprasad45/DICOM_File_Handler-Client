@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+/* eslint-disable react-refresh/only-export-components */
+import React, { useEffect, useState, useCallback, Suspense, lazy } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../../services/popups/popups";
 import isEmailValid from "../../utils/isEmailValid";
 import { userAxios } from "../../Constraints/axiosInterceptor";
 import { imageUrls } from "../../constants/strings";
+const Spinner = lazy(() => import("../../components/spinner/Spinner"));
+
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -18,58 +21,66 @@ const LoginPage: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    try {
-      if (!password || !email) {
-        showErrorToast("Please enter both email and password");
-        return;
+      try {
+        if (!password || !email) {
+          showErrorToast("Please enter both email and password");
+          return;
+        }
+
+        if (!isEmailValid(email)) {
+          showErrorToast("Please enter a valid email address");
+          return;
+        }
+
+        const response = await userAxios.post("/login", {
+          email,
+          password,
+        });
+
+        if (response.data.userData.emailVerification !== true) {
+          showErrorToast("Email is not verified");
+          navigate("/otp", { state: { data: email } });
+        } else if (response.data.userData && response.data.userData.email) {
+          localStorage.setItem("usertoken", response.data.token);
+          localStorage.setItem("userEmail", response.data.userData.email);
+          showSuccessToast("Login Successful");
+          setTimeout(() => {
+            navigate("/home");
+          }, 2300);
+        } else {
+          showErrorToast("Please check email & password");
+        }
+      } catch (error) {
+        alert((error as Error).message);
       }
-
-      if (!isEmailValid(email)) {
-        showErrorToast("Please enter a valid email address");
-        return;
-      }
-
-      const response = await userAxios.post("/login", {
-        email,
-        password,
-      });
-
-      if (response.data.userData.emailVerification !== true) {
-        showErrorToast("email is not verified");
-        navigate("/otp", { state: { data: email } });
-      } else if (response.data.userData && response.data.userData.email) {
-        localStorage.setItem("usertoken", response.data.token);
-        localStorage.setItem("userEmail", response.data.userData.email);
-        showSuccessToast("Login Successful");
-        setTimeout(() => {
-          navigate("/home");
-        }, 2300);
-      } else {
-        showErrorToast("Please check email & password");
-      }
-    } catch (error) {
-      alert((error as Error).message);
-    }
-  };
+    },
+    [email, password, navigate]
+  );
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900"   style={{
-      backgroundImage: `url(${imageUrls.imageUrl1})`,
-      backgroundSize: "cover",
-    }}>
+    <section
+      className="bg-gray-50 dark:bg-gray-900"
+      style={{
+        backgroundImage: `url(${imageUrls.imageUrl1})`,
+        backgroundSize: "cover",
+      }}
+    >
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <img
-            className="w-8 h-8 mr-2"
-            src="https://res.cloudinary.com/dc3otxw05/image/upload/v1715892724/User%20Image/oqowi3edaj5h0svyh6zc.jpg"
-            alt="logo"
-          />
+          <Suspense fallback={<Spinner/>}>
+            <img
+              className="w-8 h-8 mr-2"
+              src={imageUrls.imageUrl4}
+              alt="logo"
+            />
+          </Suspense>
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             DICOM
           </h1>
@@ -139,4 +150,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default React.memo(LoginPage);

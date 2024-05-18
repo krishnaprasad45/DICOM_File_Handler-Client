@@ -1,8 +1,9 @@
+import React from 'react';
 import { useLocation } from 'react-router-dom';
-import './MedicalReport.css'; // Optional: to add custom styles
+import './MedicalReport.css';
 import MedicalDocument from '../../Interfaces/dicomInterface';
 
-const MedicalReport = () => {
+const MedicalReport = React.memo(() => {
   const location = useLocation();
   const document: MedicalDocument = location.state?.data || {};
 
@@ -82,6 +83,6 @@ const MedicalReport = () => {
       )}
     </div>
   );
-};
+});
 
 export default MedicalReport;

@@ -1,14 +1,11 @@
-import React from "react";
 import ListRecords from "../../components/list-records/ListRecords";
 import NavBar from "../../components/navNar/NavBar";
 
-const ListRecordPage = () => {
-  return (
-    <div>
-      <NavBar />
-      <ListRecords />
-    </div>
-  );
-};
+const ListRecordPage = () => (
+  <>
+    <NavBar />
+    <ListRecords />
+  </>
+);
 
 export default ListRecordPage;
