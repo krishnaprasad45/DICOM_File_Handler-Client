@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { userAxios } from "../../Constraints/axiosInterceptor";
 import { showErrorToast, showSuccessToast } from "../../services/popups/popups";
 import { ToastContainer } from "react-toastify";
+import { imageUrls } from "../../constants/strings";
 
 const SignupPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -19,13 +20,12 @@ const SignupPage: React.FC = () => {
     }
 
     try {
-      const response = await userAxios.post("/signup", {
+      await userAxios.post("/signup", {
         email,
         password,
       });
-      showSuccessToast("Otp sent");
-      console.log(response);
       navigate("/otp", { state: { data: email } });
+      showSuccessToast("Otp sent");
     } catch (error) {
       console.error("There was an error signing up!", error);
       showErrorToast("Signup failed, please try again.");
@@ -33,7 +33,13 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <section
+      className="bg-gray-50 dark:bg-gray-900"
+      style={{
+        backgroundImage: `url(${imageUrls.imageUrl3})`,
+        backgroundSize: "cover",
+      }}
+    >
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"

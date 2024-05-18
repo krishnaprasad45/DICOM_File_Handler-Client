@@ -5,6 +5,7 @@ import "./otpstyle.css";
 import { ToastContainer } from "react-toastify";
 import { showErrorToast, showSuccessToast } from "../../services/popups/popups";
 import { userAxios } from "../../Constraints/axiosInterceptor";
+import { imageUrls } from "../../constants/strings";
 interface ResponseData {
   data: {
     message: string;
@@ -101,11 +102,17 @@ const OTPPage: React.FC = () => {
     }
   };
   return (
-    <div className="otp-container otp-body">
+    <div
+      className="otp-container otp-body"
+      style={{
+        backgroundImage: `url(${imageUrls.imageUrl3})`,
+        backgroundSize: "cover",
+      }}
+    >
+      {" "}
       <h1 className="font-semibold ">We sent OTP to your email </h1>
       <ToastContainer />
       <i> {email}</i>
-
       <h4>Enter OTP Code</h4>
       <form onSubmit={handleSubmit}>
         <div className="input-field ">

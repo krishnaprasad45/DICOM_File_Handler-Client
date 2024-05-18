@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import useHistory hook
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -18,9 +19,9 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const StyledButton = styled(Button)({
-  fontSize: "1.2rem",
-  padding: "12px 24px",
-  borderRadius: "10px",
+  fontSize: "1.6rem",
+  padding: "20px 25px",
+  borderRadius: "20px",
   backgroundColor: "#4CAF50",
   color: "white",
   "&:hover": {
@@ -31,6 +32,7 @@ const StyledButton = styled(Button)({
 const UploadBtn: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const navigate = useNavigate(); // Initialize useHistory hook
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -55,6 +57,9 @@ const UploadBtn: React.FC = () => {
         const pdfUrl = URL.createObjectURL(pdfBlob);
         setPdfUrl(pdfUrl);
         console.log("File uploaded successfully:", response.data);
+        
+        // Navigate to a different page after successful upload
+        navigate("/pdf-viewer",{state:{data:pdfUrl}});
       } catch (error) {
         console.error("Error uploading file:", error);
       }
@@ -63,12 +68,11 @@ const UploadBtn: React.FC = () => {
 
   return (
     <div>
-      <StyledButton component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+      <StyledButton component="label" variant="contained" startIcon={<CloudUploadIcon style={{ fontSize: 48 }} />}>
         Upload file
         <VisuallyHiddenInput type="file" onChange={handleFileChange} />
       </StyledButton>
       {selectedFile && <p>Selected file: {selectedFile.name}</p>}
-      {pdfUrl && <iframe src={pdfUrl} width="100%" height="400px" title="PDF Viewer"></iframe>}
     </div>
   );
 };

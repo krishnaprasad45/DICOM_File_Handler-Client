@@ -1,0 +1,24 @@
+.medical-report {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 20px auto;
+  }
+  
+  .medical-report h1 {
+    text-align: center;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  
+  .field {
+    margin-bottom: 10px;
+  }
+  
+  .field strong {
+    display: inline-block;
+    width: 150px;
+  }
+  

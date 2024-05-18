@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../../services/popups/popups";
 import isEmailValid from "../../utils/isEmailValid";
 import { userAxios } from "../../Constraints/axiosInterceptor";
+import { imageUrls } from "../../constants/strings";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -55,7 +56,10 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <section className="bg-gray-50 dark:bg-gray-900"   style={{
+      backgroundImage: `url(${imageUrls.imageUrl1})`,
+      backgroundSize: "cover",
+    }}>
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <a
           href="#"
@@ -121,7 +125,7 @@ const LoginPage: React.FC = () => {
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Don’t have an account yet?{" "}
                 <Link
-                  to="/"
+                  to="/signup"
                   className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                 >
                   Sign up
