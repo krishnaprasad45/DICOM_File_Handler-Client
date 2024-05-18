@@ -1,11 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState, useCallback, ChangeEvent } from "react";
 import { userAxios } from "../../Constraints/axiosInterceptor";
-import MedicalDocument from "../../Interfaces/dicomInterface";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 
 
+interface MedicalDocument {
+  [key: string]: string | number | boolean;
+  
+}
 
 const ListRecords: React.FC = React.memo(() => {
   const [records, setRecords] = useState<MedicalDocument[]>([]);
@@ -38,14 +41,18 @@ const ListRecords: React.FC = React.memo(() => {
     debouncedSearch(e.target.value);
   };
 
-  const handleViewClick = useCallback((record: MedicalDocument) => {
-    navigate("/report/details", { state: { data: record } });
-  }, [navigate]);
+  const handleViewClick = useCallback(
+    (record: MedicalDocument) => {
+      navigate("/report/details", { state: { data: record } });
+    },
+    [navigate]
+  );
 
-  const filteredRecords: MedicalDocument[] = records.filter(
-    (record) =>
-      record.patientName &&
-      record.patientName.toLowerCase().includes(searchTerm.toLowerCase())
+  // Filter records based on search term
+  const filteredRecords = records.filter((record) =>
+    Object.values(record).some((value) =>
+      typeof value === "string" && value.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   return (
@@ -73,22 +80,39 @@ const ListRecords: React.FC = React.memo(() => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">Name</th>
-              <th scope="col" className="px-6 py-3">Body Part</th>
-              <th scope="col" className="px-6 py-3">Doctor</th>
-              <th scope="col" className="px-6 py-3">Study Date</th>
-              <th scope="col" className="px-6 py-3">Laboratory</th>
-              <th scope="col" className="px-6 py-3">Place</th>
-              <th scope="col" className="px-6 py-3">More</th>
+              <th scope="col" className="px-6 py-3">
+                Name
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Body Part
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Doctor
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Study Date
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Laboratory
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Place
+              </th>
+              <th scope="col" className="px-6 py-3">
+                More
+              </th>
             </tr>
           </thead>
           <tbody>
-            {filteredRecords.map((record) => (
+            {filteredRecords.map((record, index) => (
               <tr
-                key={record.studyID}
+                key={index} 
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
-                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                >
                   <span>{record.patientName}</span>
                 </th>
                 <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">

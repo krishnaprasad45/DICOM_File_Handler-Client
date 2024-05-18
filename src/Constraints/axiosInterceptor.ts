@@ -5,7 +5,7 @@ const authURL = import.meta.env.VITE_APIURL;
 export const userAxios = axios.create({
     baseURL: authURL,
     headers: {
-        "Content-Type": "application/json", // Change to JSON content type
+        "Content-Type": "application/json", // JSON content type
     },
 });
 

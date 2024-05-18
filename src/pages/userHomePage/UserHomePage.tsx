@@ -2,7 +2,7 @@ import NavBar from "../../components/navNar/NavBar";
 import UploadBtn from "../../components/uploadButton/UploadBtn";
 import { imageUrls } from "../../constants/strings";
 
-const UserHomePage:React.FC = () => {
+const UserHomePage: React.FC = () => {
   return (
     <div
       style={{

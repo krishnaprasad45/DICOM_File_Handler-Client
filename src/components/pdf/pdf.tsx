@@ -7,8 +7,8 @@ const PDFViewer = React.memo(() => {
 
   const iframeStyle = {
     width: "100%",
-    height: "100vh", // Use viewport height to fill the entire page
-    border: "none", // Remove iframe border
+    height: "100vh", 
+    border: "none", 
   };
 
   return (
