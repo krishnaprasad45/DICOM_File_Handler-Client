@@ -3,6 +3,7 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import SignupPage from './pages/SignupPage/SignupPage';
 import UserHomePage from "./pages/userHomePage/UserHomePage";
 import OTPPage from "./pages/Otp/OTPPage";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/home" element={<UserHomePage />} />
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/otp" element={<OTPPage />} />
           <Route path="/signup" element={<SignupPage />} />
         </Routes>

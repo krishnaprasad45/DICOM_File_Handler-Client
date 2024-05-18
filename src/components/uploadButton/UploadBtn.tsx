@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react"; // Import useState
+import { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -18,33 +18,42 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const StyledButton = styled(Button)({
-  fontSize: "1.2rem", // Increase font size
-  padding: "12px 24px", // Increase padding for a bigger button
-  borderRadius: "10px", // Add border radius for a more stylish look
-  backgroundColor: "#4CAF50", // Change background color
-  color: "white", // Change text color to contrast with background
+  fontSize: "1.2rem",
+  padding: "12px 24px",
+  borderRadius: "10px",
+  backgroundColor: "#4CAF50",
+  color: "white",
   "&:hover": {
-    backgroundColor: "#45a049", // Darker shade on hover
+    backgroundColor: "#45a049",
   },
 });
 
-export default function UploadBtn() {
+const UploadBtn: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files![0]; // Get the selected file
-    setSelectedFile(file);
-  
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if(file) setSelectedFile(file);
+
     if (file) {
       const formData = new FormData();
-      formData.append("file", file); // Append the selected file to form data
-  
+      formData.append("file", file);
+      const userEmail = localStorage.getItem('userEmail') || '';
+
+      formData.append("userEmail", userEmail);
+
       try {
-        const response = await userAxios.post("/uploadfile", formData,{
+        const response = await userAxios.post("/uploadfile", formData, {
           headers: {
-              "Content-Type": "multipart/form-data", // Set multipart/form-data for file upload
-          }});
+            "Content-Type": "multipart/form-data",
+          },
+          responseType: 'blob',
+        });
+
+        const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        setPdfUrl(pdfUrl);
         console.log("File uploaded successfully:", response.data);
       } catch (error) {
         console.error("Error uploading file:", error);
@@ -52,23 +61,16 @@ export default function UploadBtn() {
     }
   };
 
-  console.log(200);
-  console.log("file", selectedFile);
   return (
     <div>
-      <StyledButton
-        component="label"
-        role={undefined}
-        variant="contained"
-        tabIndex={-1}
-        startIcon={<CloudUploadIcon />}
-      >
+      <StyledButton component="label" variant="contained" startIcon={<CloudUploadIcon />}>
         Upload file
-        <VisuallyHiddenInput type="file" onChange={handleFileChange} />{" "}
-        {/* Attach onChange event handler */}
+        <VisuallyHiddenInput type="file" onChange={handleFileChange} />
       </StyledButton>
-      {selectedFile && <p>Selected file: {selectedFile.name}</p>}{" "}
-      {/* Display the selected file name */}
+      {selectedFile && <p>Selected file: {selectedFile.name}</p>}
+      {pdfUrl && <iframe src={pdfUrl} width="100%" height="400px" title="PDF Viewer"></iframe>}
     </div>
   );
-}
+};
+
+export default UploadBtn;

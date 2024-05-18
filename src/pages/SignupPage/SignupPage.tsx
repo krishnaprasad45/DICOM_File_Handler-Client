@@ -13,14 +13,12 @@ const SignupPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    console.log(email, password, confirmPassword);
     if (password !== confirmPassword) {
       showErrorToast("Passwords do not match!");
       return;
     }
 
     try {
-      console.log("...email,password", email, password);
       const response = await userAxios.post("/signup", {
         email,
         password,

@@ -15,7 +15,6 @@ const OTPPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.data;
-  console.log("email!!!", email);
   useEffect(() => {
     const handleKeyUp = (
       e: KeyboardEvent,

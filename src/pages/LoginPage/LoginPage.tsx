@@ -13,7 +13,7 @@ const LoginPage: React.FC = () => {
     const token = localStorage.getItem("usertoken");
 
     if (token) {
-      navigate("/");
+      navigate("/home");
     }
   }, [navigate]);
 
