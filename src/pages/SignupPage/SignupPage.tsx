@@ -35,7 +35,7 @@ const SignupPage: React.FC = function SignupPage() {
       }
 
       if (password !== confirmPassword) {
-        showErrorToast("Passwords do not match!");
+        showErrorToast("Passwords should match!");
         return;
       }
 

@@ -26,6 +26,7 @@ const MenuAppBar = React.memo(() => {
 
   const handleLogout = useCallback(() => {
     localStorage.removeItem("usertoken");
+    localStorage.removeItem("userEmail");
     navigate("/");
     handleClose();
   }, [navigate, handleClose]);
