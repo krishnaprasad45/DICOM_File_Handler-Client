@@ -16,17 +16,24 @@ The app uses JWT authentication for secure access to protected endpoints.
 
 ### <span style="color:#17a2b8;"> Client developement tools,libraries and technologies used</span>
 1. React + Vite 
-2. Tainwind CSS
+2. Tailwind CSS
 3. TypeScript
-4. react-toastify
-5. JWT (Authenticate users and securely transmit data between the client and server)
-6. ESLint (To maintain consistent coding standards and identifies potential errors)
+4. react-toastify (For popups )
+5. axios -Improved, efficienct and reliable in fetching data from APIs
+6. lodash - For efficient debounce functionality, delaying function execution until after a specified time interval has elapsed.
+7. JWT - (Authenticate users and securely transmit data between the client and server)
+8. ESLint - (To maintain consistent coding standards and identifies potential errors)
 
-### <span style="color:#28a745;">Optimization Techiniques Used</span>
-1.React.memo: Remembers previous appearance, skips updates if props haven't changed.
-2.useCallback: Saves functions, avoids recreation each render.
-3.useMemo: Saves computation, recalculates only when needed.
-4.Component decomposition: Splits components, eases React's load, speeds up rendering for a more responsive app.
+### Optimization Techniques Used
+
+- **React.memo:** Remembers the previous appearance of a component and skips updates if the props haven't changed.
+- **useCallback:** Saves functions, avoiding recreation of functions on each render.
+- **useMemo:** Saves computational resources by recalculating values only when needed.
+- **React.lazy:** Enables efficient loading of components when they are needed.
+- **Debounce:** Ensures efficient search functionality by delaying function execution until after a specified time interval has elapsed.
+- **Component Separation:** Enhances reusability and facilitates easier loading by breaking down components into smaller, manageable pieces.
+
+
 
 <a href="https://github.com/krishnaprasad45/DICOM_File_Handler-Server"><h2>CLICK HERE TO SEE THE SERVER SIDE CODE 🌟</h2></a>
 ---
