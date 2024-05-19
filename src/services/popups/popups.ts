@@ -1,5 +1,4 @@
 import { toast, ToastPosition } from 'react-toastify';
-import "./popup.css"
 import "react-toastify/dist/ReactToastify.css";
 
 const toastConfig = {

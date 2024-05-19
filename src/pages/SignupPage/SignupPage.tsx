@@ -1,37 +1,60 @@
 /* eslint-disable react-refresh/only-export-components */
+
 import React, { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userAxios } from "../../Constraints/axiosInterceptor";
 import { showErrorToast, showSuccessToast } from "../../services/popups/popups";
 import { ToastContainer } from "react-toastify";
 import { imageUrls } from "../../constants/strings";
+import { validateEmail, validatePassword } from "../../utils/formValidation";
+import axios from "axios";
 
 const SignupPage: React.FC = function SignupPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = useCallback(async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = useCallback(
+    async (event: React.FormEvent) => {
+      event.preventDefault();
 
-    if (password !== confirmPassword) {
-      showErrorToast("Passwords do not match!");
-      return;
-    }
+      setEmailError(null);
+      setPasswordError(null);
 
-    try {
-      await userAxios.post("/signup", {
-        email,
-        password,
-      });
-      navigate("/otp", { state: { data: email } });
-      showSuccessToast("Otp sent");
-    } catch (error) {
-      console.error("There was an error signing up!", error);
-      showErrorToast("Signup failed, please try again.");
-    }
-  }, [email, password, confirmPassword, navigate]);
+      if (!validateEmail(email)) {
+        setEmailError("Enter valid email!");
+        return;
+      }
+
+      if (!validatePassword(password)) {
+        setPasswordError("Password must be at least 8 characters long!");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showErrorToast("Passwords do not match!");
+        return;
+      }
+
+      try {
+        await userAxios.post("/signup", { email, password });
+        navigate("/otp", { state: { data: email } });
+        showSuccessToast("Otp sent");
+      } catch (error) {
+        console.error("There was an error signing up!", error);
+
+        if (axios.isAxiosError(error) && error.response?.status === 409) {
+          showErrorToast("Email already exists");
+        } else {
+          showErrorToast("Signup failed, please try again.");
+        }
+      }
+    },
+    [email, password, confirmPassword, navigate]
+  );
 
   return (
     <section
@@ -46,11 +69,7 @@ const SignupPage: React.FC = function SignupPage() {
           href="#"
           className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
-          <img
-            className="w-8 h-8 mr-2"
-            src={imageUrls.imageUrl4}
-            alt="logo"
-          />
+          <img className="w-8 h-8 mr-2" src={imageUrls.imageUrl4} alt="logo" />
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
             DICOM
             <ToastContainer />
@@ -75,10 +94,14 @@ const SignupPage: React.FC = function SignupPage() {
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className={`bg-gray-50 border ${
+                    emailError ? "border-red-500" : "border-gray-300"
+                  } text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                   placeholder="name@gmail.com"
-                  required
                 />
+                {emailError && (
+                  <p className="text-red-500 text-sm">{emailError}</p>
+                )}
               </div>
               <div>
                 <label
@@ -94,9 +117,13 @@ const SignupPage: React.FC = function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
+                  className={`bg-gray-50 border ${
+                    passwordError ? "border-red-500" : "border-gray-300"
+                  } text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                 />
+                {passwordError && (
+                  <p className="text-red-500 text-sm">{passwordError}</p>
+                )}
               </div>
               <div>
                 <label
@@ -113,7 +140,6 @@ const SignupPage: React.FC = function SignupPage() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
                 />
               </div>
 
